@@ -7,8 +7,8 @@
     <ProjectGuid>{1D0F1B5E-E52A-43DE-B66E-A22D9A7C8F9F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KeePass.Plugins.Reaper</RootNamespace>
-    <AssemblyName>KeePass.Plugins.Reaper</AssemblyName>
+    <RootNamespace>KeeReaper</RootNamespace>
+    <AssemblyName>KeeReaper</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="KeePass">
+      <HintPath>..\..\Program Files (x86)\KeePass Password Safe 2\KeePass.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Reaper.cs" />
+    <Compile Include="KeeReaperExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

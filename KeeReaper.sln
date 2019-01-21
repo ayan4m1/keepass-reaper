@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeePass.Plugins.Reaper", "KeePass.Plugins.Reaper.csproj", "{1D0F1B5E-E52A-43DE-B66E-A22D9A7C8F9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeeReaper", "KeeReaper.csproj", "{1D0F1B5E-E52A-43DE-B66E-A22D9A7C8F9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

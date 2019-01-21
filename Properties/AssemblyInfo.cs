@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KeePass.Plugins.Reaper")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("KeeReaper")]
+[assembly: AssemblyDescription("Automatically rotate passwords")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("KeePass.Plugins.Reaper")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("ayan4m1")]
+[assembly: AssemblyProduct("KeePass Plugin")]
+[assembly: AssemblyCopyright("Copyright © ayan4m1 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
