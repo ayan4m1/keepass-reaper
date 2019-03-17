@@ -36,7 +36,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>reaper.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>keepass-reaper.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="KeePass, Version=2.41.0.33753, Culture=neutral, processorArchitecture=MSIL">
@@ -66,9 +66,9 @@
     <Compile Include="StaleEntry.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="keepass-reaper.pfx" />
     <None Include="LICENSE" />
     <None Include="README.md" />
-    <None Include="reaper.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
