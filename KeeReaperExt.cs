@@ -1,18 +1,17 @@
-﻿using KeePass.Forms;
-using KeePass.Plugins;
-using KeePassLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using KeePass.Forms;
+using KeePass.Plugins;
+using KeePassLib;
 
 namespace KeeReaper
 {
     public class KeeReaperExt : Plugin
     {
-        private const int cutoffDays = 90;
-        private IPluginHost host = null;
-        private PwDatabase currentDatabase = null;
+        private IPluginHost _host;
+        private PwDatabase _currentDatabase;
 
         public override bool Initialize(IPluginHost host)
         {
@@ -21,15 +20,15 @@ namespace KeeReaper
                 return false;
             }
 
-            this.host = host;
+            _host = host;
             host.MainWindow.FileOpened += MainWindow_FileOpened;
             return true;
         }
 
         public override void Terminate()
         {
-            host.MainWindow.FileOpened -= MainWindow_FileOpened;
-            host = null;
+            _host.MainWindow.FileOpened -= MainWindow_FileOpened;
+            _host = null;
         }
 
         public override ToolStripMenuItem GetMenuItem(PluginMenuType type)
@@ -47,7 +46,7 @@ namespace KeeReaper
 
         private void MainWindow_FileOpened(object sender, FileOpenedEventArgs e)
         {
-            currentDatabase = e.Database;
+            _currentDatabase = e.Database;
         }
 
         private void CheckStaleItem_Click(object sender, EventArgs e)
@@ -57,16 +56,16 @@ namespace KeeReaper
 
         private void PerformCheck()
         {
-            var expired = WalkEntries(currentDatabase.RootGroup, new List<StaleEntry>());
+            var expired = WalkEntries(_currentDatabase.RootGroup, new List<StaleEntry>());
 
             if (expired.Count == 0)
             {
                 return;
             }
 
-            using (var dialog = new StaleEntries()
+            using (var dialog = new StaleEntries
             {
-                Database = host.MainWindow.ActiveDatabase
+                Database = _host.MainWindow.ActiveDatabase
             })
             {
                 dialog.AddEntries(expired);
@@ -74,15 +73,9 @@ namespace KeeReaper
             }
         }
 
-        private List<StaleEntry> WalkEntries(PwGroup root, List<StaleEntry> entries)
+        private static List<StaleEntry> WalkEntries(PwGroup root, List<StaleEntry> entries)
         {
-            var today = DateTime.Now;
-            var cutoff = today.AddDays(-cutoffDays);
-            entries.AddRange(root
-                .Entries
-                .Where(entry => entry.LastModificationTime <= cutoff)
-                .Select(StaleEntry.FromPwEntry)
-            );
+            entries.AddRange(root.Entries.Select(StaleEntry.FromPwEntry));
 
             foreach (var group in root.Groups)
             {

@@ -1,11 +1,8 @@
-﻿using KeePass.Forms;
-using KeePass.UI;
-using KeePassLib;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
+using System.Diagnostics;
 using System.Windows.Forms;
+using KeePassLib;
 
 namespace KeeReaper
 {
@@ -13,40 +10,42 @@ namespace KeeReaper
     {
         public PwDatabase Database;
 
-        private Assembly thisAssembly = Assembly.GetEntryAssembly();
+        private const int DefaultCutoffDays = 90;
+        private readonly ListView _hiddenEntriesList = new ListView();
+
+        private int CurrentCutoffDays => (int)CutoffDays.Value;
 
         public StaleEntries()
         {
             InitializeComponent();
 
+            CutoffDays.Value = DefaultCutoffDays;
+
             EntriesList.ListViewItemSorter = Comparer<ListViewItem>.Create((x, y) => {
                 var xEntry = x.Tag as StaleEntry;
                 var yEntry = y.Tag as StaleEntry;
 
-                return xEntry.AgeDays.CompareTo(yEntry.AgeDays);
+                return xEntry?.AgeDays.CompareTo(yEntry?.AgeDays) ?? 0;
             });
         }
 
         public void AddEntry(StaleEntry entry)
         {
-            EntriesList.Items.Add(entry.ToListViewItem());
+            var listItem = entry.ToListViewItem();
+
+            if (entry.AgeDays < CurrentCutoffDays)
+            {
+                _hiddenEntriesList.Items.Add(listItem);
+            }
+            else
+            {
+                EntriesList.Items.Add(listItem);
+            }
         }
 
         public void AddEntries(List<StaleEntry> entries)
         {
             entries.ForEach(AddEntry);
-        }
-
-        private ImageList GetImageList()
-        {
-            var result = new ImageList();
-            var (cx, cy) = (DpiUtil.ScaleIntX(16), DpiUtil.ScaleIntY(16));
-            var iconStream = thisAssembly.GetManifestResourceStream("B15x14_FileNew");
-            var bitmap = Image.FromStream(iconStream);
-
-            result.Images.Add(bitmap);
-
-            return result;
         }
 
         private void EntriesList_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -55,16 +54,61 @@ namespace KeeReaper
             EntriesList.Sort();
         }
 
-        private void EntriesList_DoubleClick(object rawSender, System.EventArgs e)
+        private void EntriesList_DoubleClick(object rawSender, EventArgs e)
         {
             var sender = rawSender as ListView;
-            var staleEntry = sender.SelectedItems[0].Tag as StaleEntry;
-            var pwEntry = staleEntry.BackingEntry;
-            using (var form = new PwEntryForm())
+            var staleEntry = sender?.SelectedItems[0].Tag as StaleEntry;
+            var pwEntry = staleEntry?.BackingEntry;
+
+            if (pwEntry == null)
             {
-                form.InitEx(pwEntry, PwEditMode.ViewReadOnlyEntry, Database, GetImageList(), false, false);
-                UIUtil.ShowDialogAndDestroy(form);
+                return;
             }
+
+            var url = pwEntry?.Strings.ReadSafe(PwDefs.UrlField);
+
+            if (url == null || string.IsNullOrWhiteSpace(url))
+            {
+                MessageBox.Show("No URL to open!", "Open failed", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+
+        private void CutoffDays_ValueChanged(object sender, EventArgs e)
+        {
+            var toShow = new List<ListViewItem>();
+            var toHide = new List<ListViewItem>();
+
+            foreach (var rawItem in EntriesList.Items)
+            {
+                var item = rawItem as ListViewItem;
+                var entry = item?.Tag as StaleEntry;
+                if (entry?.AgeDays <= CurrentCutoffDays)
+                {
+                    toHide.Add(item);
+                    EntriesList.Items.Remove(item);
+                }
+            }
+
+            foreach (var rawItem in _hiddenEntriesList.Items)
+            {
+                var item = rawItem as ListViewItem;
+                var entry = item?.Tag as StaleEntry;
+                if (entry?.AgeDays > CurrentCutoffDays)
+                {
+                    toShow.Add(item);
+                    _hiddenEntriesList.Items.Remove(item);
+                }
+            }
+
+            EntriesList.Items.AddRange(toShow.ToArray());
+            _hiddenEntriesList.Items.AddRange(toHide.ToArray());
         }
     }
 }
