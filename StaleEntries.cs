@@ -33,13 +33,13 @@ namespace KeeReaper
         {
             var listItem = entry.ToListViewItem();
 
-            if (entry.AgeDays < CurrentCutoffDays)
+            if (entry.AgeDays >= CurrentCutoffDays || entry.Expired)
             {
-                _hiddenEntriesList.Items.Add(listItem);
+                EntriesList.Items.Add(listItem);
             }
             else
             {
-                EntriesList.Items.Add(listItem);
+                _hiddenEntriesList.Items.Add(listItem);
             }
         }
 
@@ -89,7 +89,7 @@ namespace KeeReaper
             {
                 var item = rawItem as ListViewItem;
                 var entry = item?.Tag as StaleEntry;
-                if (entry?.AgeDays <= CurrentCutoffDays)
+                if (entry?.AgeDays <= CurrentCutoffDays && !entry.Expired)
                 {
                     toHide.Add(item);
                     EntriesList.Items.Remove(item);
