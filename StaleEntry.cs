@@ -19,7 +19,7 @@ namespace KeeReaper
         public DateTime? Expires { get; private set; }
         public PwEntry BackingEntry { get; private set; }
 
-        public int AgeDays => (int)Math.Ceiling((DateTime.Now - LastChanged).TotalDays);
+        public int AgeDays => (int)Math.Floor((DateTime.Now - LastChanged).TotalDays);
         public bool Expired => Expires.HasValue && DateTime.Today.CompareTo(Expires) > 0;
 
         public static StaleEntry FromPwEntry(PwEntry entry) => new StaleEntry
