@@ -1,14 +1,14 @@
-# keepass-reaper
+# KeePass Reaper
 
 This plugin shows you the age of your credentials. It adds an item to the Tools menu called "Show stale entries," which brings up a small dialog that shows all credentials that are either older than (i.e. last modified before) the configurable cutoff date _or_ explicitly expired based on the KeePass entry's expiration date.
 
 *NOTE* This plugin only supports KeePass 2.x.
 
-## installation
+## Installation
 
-Follow the [generic instructions](https://keepass.info/help/v2/plugins.html) for plugin installation.
+Follow the [generic instructions](https://keepass.info/help/v2/plugins.html) for plugin installation. Basically, place the DLL in your KeePass Plugins directory.
 
-## usage
+## Usage
 
 Goto Tools > Show stale entries... You should see a dialog like the following:
 
