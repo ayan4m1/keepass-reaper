@@ -56,10 +56,11 @@ namespace KeeReaper
 
         private void PerformCheck()
         {
-            var expired = WalkEntries(_currentDatabase.RootGroup, new List<StaleEntry>());
+            var entries = WalkEntries(_currentDatabase.RootGroup, new List<StaleEntry>());
 
-            if (expired.Count == 0)
+            if (entries.Count == 0)
             {
+                MessageBox.Show("Did not find any password entries outside the Recycle Bin!", "Show failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -68,7 +69,7 @@ namespace KeeReaper
                 Database = _host.MainWindow.ActiveDatabase
             })
             {
-                dialog.AddEntries(expired);
+                dialog.AddEntries(entries);
                 dialog.ShowDialog();
             }
         }
