@@ -69,7 +69,7 @@ namespace KeeReaper
 
             if (url == null || string.IsNullOrWhiteSpace(url))
             {
-                MessageBox.Show("No URL to open!", "Open failed", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("No URL to open!", "Open failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
